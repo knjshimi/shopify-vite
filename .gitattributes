@@ -1,0 +1,6 @@
+# Default all files to LF line endings
+* text=auto eol=lf
+
+# Allow CRLF line endings for Windows-only file types
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
