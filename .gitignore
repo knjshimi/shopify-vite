@@ -1,3 +1,23 @@
+# Project and packages #
+########################
+*.code-workspace
+**/node_modules
+**/.turbo/
+**/dist
+example/shopify.theme.toml
+example/theme/assets
+example/theme/snippets/vite.liquid
+example/theme/snippets/icon-*.liquid
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
 # OS generated files #
 ######################
 .DS_Store

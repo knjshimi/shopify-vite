@@ -1,0 +1,26 @@
+{
+  "name": "vite-shopify-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite build --watch",
+    "shopify:dev": "shopify theme dev -e dev",
+    "shopify:deploy": "shopify theme push -e dev",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "sass": "^1.69.7",
+    "tsconfig": "^7.0.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "vite-plugin-page-reload": "^0.2.0",
+    "vite-plugin-shopify": "^3.0.0",
+    "vite-plugin-shopify-assets": "workspace:*"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}

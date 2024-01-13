@@ -1,0 +1,10 @@
+# Vite
+assets/.vite
+
+# Defaults
+config/settings_data.json
+locales/*.json
+sections/*.json
+templates/*.json
+templates/customers/*.json
+templates/metaobject/*.json

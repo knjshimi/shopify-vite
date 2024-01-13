@@ -1,0 +1,16 @@
+root: theme
+
+UndefinedObject:
+  exclude_snippets: true
+
+AssetUrlFilters:
+  ignore:
+    - snippets/vite.liquid
+
+RemoteAsset:
+  ignore:
+    - snippets/vite.liquid
+
+UnusedSnippet:
+  ignore:
+    - snippets/icon-*.liquid

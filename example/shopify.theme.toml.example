@@ -1,0 +1,5 @@
+[environments.dev]
+store = ""
+password = ""
+theme = ""
+path = "theme"
