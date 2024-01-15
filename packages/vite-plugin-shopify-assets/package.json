@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-shopify-assets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vite plugin to handle static assets in Vite Shopify themes",
   "type": "module",
   "module": "./dist/index.js",
@@ -18,7 +18,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/knjshimi/vite-plugin-shopify-assets.git"
+    "url": "git+https://github.com/knjshimi/shopify-vite.git",
+    "directory": "packages/vite-plugin-shopify-assets"
   },
   "keywords": [
     "vite plugin",
@@ -29,9 +30,9 @@
   "author": "Kenji Shimizu",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/knjshimi/vite-plugin-shopify-assets/issues"
+    "url": "https://github.com/knjshimi/shopify-vite/issues"
   },
-  "homepage": "https://github.com/knjshimi/vite-plugin-shopify-assets#readme",
+  "homepage": "https://github.com/knjshimi/shopify-vite/tree/main/packages/vite-plugin-shopify-assets",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
