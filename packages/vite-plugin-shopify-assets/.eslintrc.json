@@ -1,27 +1,40 @@
 {
   "root": true,
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "project": true,
+    "tsconfigRootDir": ".",
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
     "process": "readonly",
     "ga": "readonly"
   },
+  "env": {
+    "es2022": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended-type-checked", "prettier"],
   "rules": {
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/consistent-type-definitions": ["error", "type"]
+    "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/require-await": "off"
   },
   "overrides": [
     {
       "files": ["*.{js,cjs}"],
       "excludedFiles": ["*/**/*.{js,cjs}"],
-      "env": {
-        "node": true
-      },
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }
