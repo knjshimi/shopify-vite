@@ -13,6 +13,18 @@ export default defineConfig({
     },
   },
   plugins: [
+    shopify({
+      themeRoot: 'theme',
+      sourceCodeDir: 'frontend',
+      snippetFile: 'vite.liquid',
+      additionalEntrypoints: [
+        'frontend/foo.ts',
+        'frontend/bar.ts',
+        'frontend/modules/**/*.ts',
+        'frontend/scripts/**/*.js',
+        'frontend/styles/sections/*.scss',
+      ],
+    }),
     shopifyAssets({
       themeRoot: 'theme',
       publicDir: 'frontend/assets',
@@ -30,18 +42,6 @@ export default defineConfig({
           rename: (file, ext, src) => `${file}.liquid`,
           cleanMatch: 'icon-*.liquid',
         },
-      ],
-    }),
-    shopify({
-      themeRoot: 'theme',
-      sourceCodeDir: 'frontend',
-      snippetFile: 'vite.liquid',
-      additionalEntrypoints: [
-        'frontend/foo.ts',
-        'frontend/bar.ts',
-        'frontend/modules/**/*.ts',
-        'frontend/scripts/**/*.js',
-        'frontend/styles/sections/*.scss',
       ],
     }),
     pageReload('/tmp/theme.update', {
