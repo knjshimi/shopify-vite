@@ -58,9 +58,12 @@ export const buildPlugin = ({
 
       if (typeof _config?.publicDir !== 'undefined') {
         const relativePublicDir = relative(currentDir, publicDir);
-        logWarnConsole(
-          `Your vite config.publicDir option is set to "${_config.publicDir}", but it will be ignored - Please set this in the plugin options instead. Using: ${relativePublicDir}. `,
-        );
+
+        if (_config?.publicDir !== false) {
+          logWarnConsole(
+            `Your vite config.publicDir option is set to "${_config.publicDir}", but it will be ignored - Please set this in the plugin options instead. Using: ${relativePublicDir}. `,
+          );
+        }
       }
 
       if (!existsSync(publicDir)) {
