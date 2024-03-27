@@ -49,7 +49,6 @@ export default defineConfig({
     }),
   ],
   build: {
-    manifest: 'test-lala.json',
     sourcemap: false,
   },
 });
