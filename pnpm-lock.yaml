@@ -33,24 +33,6 @@ importers:
         specifier: ^7.3.1
         version: 7.5.0(eslint@8.57.0)(typescript@5.4.4)
 
-  example-zero:
-    devDependencies:
-      tsconfig:
-        specifier: ^7.0.0
-        version: 7.0.0
-      typescript:
-        specifier: ^5.4.3
-        version: 5.4.4
-      vite:
-        specifier: ^5.2.3
-        version: 5.2.8
-      vite-plugin-shopify:
-        specifier: ^3.0.1
-        version: 3.0.1(vite@5.2.8)
-      vite-plugin-shopify-assets:
-        specifier: workspace:*
-        version: link:../packages/vite-plugin-shopify-assets
-
   packages/tsconfig: {}
 
   packages/vite-plugin-shopify-assets:
@@ -112,6 +94,7 @@ packages:
     cpu: [ppc64]
     os: [aix]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-arm64@0.19.12:
@@ -129,6 +112,7 @@ packages:
     cpu: [arm64]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-arm@0.19.12:
@@ -146,6 +130,7 @@ packages:
     cpu: [arm]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/android-x64@0.19.12:
@@ -163,6 +148,7 @@ packages:
     cpu: [x64]
     os: [android]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/darwin-arm64@0.19.12:
@@ -180,6 +166,7 @@ packages:
     cpu: [arm64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/darwin-x64@0.19.12:
@@ -197,6 +184,7 @@ packages:
     cpu: [x64]
     os: [darwin]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/freebsd-arm64@0.19.12:
@@ -214,6 +202,7 @@ packages:
     cpu: [arm64]
     os: [freebsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/freebsd-x64@0.19.12:
@@ -231,6 +220,7 @@ packages:
     cpu: [x64]
     os: [freebsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-arm64@0.19.12:
@@ -248,6 +238,7 @@ packages:
     cpu: [arm64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-arm@0.19.12:
@@ -265,6 +256,7 @@ packages:
     cpu: [arm]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-ia32@0.19.12:
@@ -282,6 +274,7 @@ packages:
     cpu: [ia32]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-loong64@0.19.12:
@@ -299,6 +292,7 @@ packages:
     cpu: [loong64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-mips64el@0.19.12:
@@ -316,6 +310,7 @@ packages:
     cpu: [mips64el]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-ppc64@0.19.12:
@@ -333,6 +328,7 @@ packages:
     cpu: [ppc64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-riscv64@0.19.12:
@@ -350,6 +346,7 @@ packages:
     cpu: [riscv64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-s390x@0.19.12:
@@ -367,6 +364,7 @@ packages:
     cpu: [s390x]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/linux-x64@0.19.12:
@@ -384,6 +382,7 @@ packages:
     cpu: [x64]
     os: [linux]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/netbsd-x64@0.19.12:
@@ -401,6 +400,7 @@ packages:
     cpu: [x64]
     os: [netbsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/openbsd-x64@0.19.12:
@@ -418,6 +418,7 @@ packages:
     cpu: [x64]
     os: [openbsd]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/sunos-x64@0.19.12:
@@ -435,6 +436,7 @@ packages:
     cpu: [x64]
     os: [sunos]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-arm64@0.19.12:
@@ -452,6 +454,7 @@ packages:
     cpu: [arm64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-ia32@0.19.12:
@@ -469,6 +472,7 @@ packages:
     cpu: [ia32]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@esbuild/win32-x64@0.19.12:
@@ -486,6 +490,7 @@ packages:
     cpu: [x64]
     os: [win32]
     requiresBuild: true
+    dev: false
     optional: true
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.57.0):
@@ -733,14 +738,6 @@ packages:
 
   /@types/semver@7.5.8:
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==, tarball: https://registry.npmjs.org/@types/semver/-/semver-7.5.8.tgz}
-    dev: true
-
-  /@types/strip-bom@3.0.0:
-    resolution: {integrity: sha512-xevGOReSYGM7g/kUBZzPqCrR/KYAo+F0yiPc85WFTJa0MSLtyFTVTU6cJu/aV4mid7IffDIWqo69THF2o4JiEQ==, tarball: https://registry.npmjs.org/@types/strip-bom/-/strip-bom-3.0.0.tgz}
-    dev: true
-
-  /@types/strip-json-comments@0.0.30:
-    resolution: {integrity: sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==, tarball: https://registry.npmjs.org/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz}
     dev: true
 
   /@typescript-eslint/eslint-plugin@7.5.0(@typescript-eslint/parser@7.5.0)(eslint@8.57.0)(typescript@5.4.4):
@@ -1147,6 +1144,7 @@ packages:
       '@esbuild/win32-arm64': 0.20.2
       '@esbuild/win32-ia32': 0.20.2
       '@esbuild/win32-x64': 0.20.2
+    dev: false
 
   /escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==, tarball: https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz}
@@ -1642,6 +1640,7 @@ packages:
     resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==, tarball: https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==, tarball: https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz}
@@ -1740,6 +1739,7 @@ packages:
 
   /picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==, tarball: https://registry.npmjs.org/picocolors/-/picocolors-1.0.0.tgz}
+    dev: false
 
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==, tarball: https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz}
@@ -1778,6 +1778,7 @@ packages:
       nanoid: 3.3.7
       picocolors: 1.0.0
       source-map-js: 1.2.0
+    dev: false
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==, tarball: https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz}
@@ -1892,6 +1893,7 @@ packages:
   /source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==, tarball: https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.0.tgz}
     engines: {node: '>=0.10.0'}
+    dev: false
 
   /source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==, tarball: https://registry.npmjs.org/source-map/-/source-map-0.8.0-beta.0.tgz}
@@ -1932,19 +1934,9 @@ packages:
       ansi-regex: 6.0.1
     dev: true
 
-  /strip-bom@3.0.0:
-    resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==, tarball: https://registry.npmjs.org/strip-bom/-/strip-bom-3.0.0.tgz}
-    engines: {node: '>=4'}
-    dev: true
-
   /strip-final-newline@2.0.0:
     resolution: {integrity: sha512-BrpvfNAE3dcvq7ll3xVumzjKjZQ5tI1sEUIKr3Uoks0XUl45St3FlatVqef9prk4jRDzhW6WZg+3bk93y6pLjA==, tarball: https://registry.npmjs.org/strip-final-newline/-/strip-final-newline-2.0.0.tgz}
     engines: {node: '>=6'}
-    dev: true
-
-  /strip-json-comments@2.0.1:
-    resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==, tarball: https://registry.npmjs.org/strip-json-comments/-/strip-json-comments-2.0.1.tgz}
-    engines: {node: '>=0.10.0'}
     dev: true
 
   /strip-json-comments@3.1.1:
@@ -2018,15 +2010,6 @@ packages:
 
   /ts-interface-checker@0.1.13:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==, tarball: https://registry.npmjs.org/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz}
-    dev: true
-
-  /tsconfig@7.0.0:
-    resolution: {integrity: sha512-vZXmzPrL+EmC4T/4rVlT2jNVMWCi/O4DIiSj3UHg1OE5kCKbk4mfrXc6dZksLgRM/TZlKnousKH9bbTazUWRRw==, tarball: https://registry.npmjs.org/tsconfig/-/tsconfig-7.0.0.tgz}
-    dependencies:
-      '@types/strip-bom': 3.0.0
-      '@types/strip-json-comments': 0.0.30
-      strip-bom: 3.0.0
-      strip-json-comments: 2.0.1
     dev: true
 
   /tsup@8.0.2(typescript@5.4.4):
@@ -2169,53 +2152,6 @@ packages:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==, tarball: https://registry.npmjs.org/uri-js/-/uri-js-4.4.1.tgz}
     dependencies:
       punycode: 2.3.1
-    dev: true
-
-  /vite-plugin-shopify@3.0.1(vite@5.2.8):
-    resolution: {integrity: sha512-eMuLbUELppJdVapmQofZaFZM/tnGnVtMFbbbdbWQk7PabSyVfpClwVWuR4ZXIwAH/1pIWg4ajhXu5HbDrrixRg==, tarball: https://registry.npmjs.org/vite-plugin-shopify/-/vite-plugin-shopify-3.0.1.tgz}
-    peerDependencies:
-      vite: ^5.0.0
-    dependencies:
-      debug: 4.3.4
-      fast-glob: 3.3.2
-      vite: 5.2.8
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /vite@5.2.8:
-    resolution: {integrity: sha512-OyZR+c1CE8yeHw5V5t59aXsUPPVTHMDjEZz8MgguLL/Q7NblxhZUlTu9xSPqlsUO/y+X7dlU05jdhvyycD55DA==, tarball: https://registry.npmjs.org/vite/-/vite-5.2.8.tgz}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      esbuild: 0.20.2
-      postcss: 8.4.38
-      rollup: 4.14.0
-    optionalDependencies:
-      fsevents: 2.3.3
     dev: true
 
   /vite@5.2.8(@types/node@20.0.0):
