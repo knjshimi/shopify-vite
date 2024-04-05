@@ -1,0 +1,18 @@
+{
+  "name": "vite-shopify-example-zero",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite build --watch"
+  },
+  "devDependencies": {
+    "tsconfig": "^7.0.0",
+    "typescript": "^5.4.3",
+    "vite": "^5.2.3",
+    "vite-plugin-shopify": "^3.0.1",
+    "vite-plugin-shopify-assets": "workspace:*"
+  },
+  "packageManager": "pnpm@8.15.6"
+}

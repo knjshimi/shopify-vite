@@ -8,6 +8,8 @@ example/shopify.theme.toml
 example/theme/assets
 example/theme/snippets/vite.liquid
 example/theme/snippets/icon-*.liquid
+example-zero/assets
+example-zero/snippets/vite-tag.liquid
 
 # Compiled source #
 ###################
