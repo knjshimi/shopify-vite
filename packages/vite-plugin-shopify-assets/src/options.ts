@@ -192,57 +192,59 @@ export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPlu
   // Vite: https://vitejs.dev/guide/api-plugin#path-normalization
   // TODO: Test the assumption above on windows
 
-  const publicDir = options.publicDir ? resolve(options.publicDir) : resolve(process.cwd(), VITE_PUBLIC_DIRNAME);
-  const themeRoot = options.themeRoot ? resolve(options.themeRoot) : resolve(process.cwd());
+  const publicDir = options?.publicDir ? resolve(options.publicDir) : resolve(process.cwd(), VITE_PUBLIC_DIRNAME);
+  const themeRoot = options?.themeRoot ? resolve(options.themeRoot) : resolve(process.cwd());
   const themeAssetsDir = join(themeRoot, THEME_ASSETS_DIRNAME);
 
-  const targets = options.targets.map((target: Target | string): ResolvedTarget => {
-    if (typeof target === 'string') {
-      return {
-        src: join(publicDir, target),
-        dest: resolve(themeRoot, themeAssetsDir),
-        cleanMatch: undefined,
-        ignore: [],
-        rename: undefined,
-        dereference: true,
-        errorOnExist: false,
-        force: true,
-        mode: 0,
-        preserveTimestamps: true,
-      };
-    }
+  const targets = options?.targets?.length
+    ? options.targets.map((target: Target | string): ResolvedTarget => {
+        if (typeof target === 'string') {
+          return {
+            src: join(publicDir, target),
+            dest: resolve(themeRoot, themeAssetsDir),
+            cleanMatch: undefined,
+            ignore: [],
+            rename: undefined,
+            dereference: true,
+            errorOnExist: false,
+            force: true,
+            mode: 0,
+            preserveTimestamps: true,
+          };
+        }
 
-    if (target.dest && fg.isDynamicPattern(target.dest)) {
-      throw new Error('[shopify-assets] Dynamic patterns are not supported in target.dest');
-    }
+        if (target.dest && fg.isDynamicPattern(target.dest)) {
+          throw new Error('[shopify-assets] Dynamic patterns are not supported in target.dest');
+        }
 
-    return {
-      src: join(publicDir, target.src),
-      dest: target.dest ? join(themeRoot, target.dest) : themeAssetsDir,
-      cleanMatch: resolveCleanMatch(themeRoot, target, options.silent),
-      ignore: Array.isArray(target?.ignore)
-        ? target.ignore.map((_ignore) => normalizePath(join(publicDir, _ignore)))
-        : typeof target.ignore === 'string'
-          ? [normalizePath(join(publicDir, target.ignore))]
-          : [],
-      rename: target.rename,
-      dereference: target.dereference ?? true,
-      errorOnExist: target.force === 'error',
-      force: target.force === 'error' ? false : true,
-      mode: target.force === 'error' ? constants.COPYFILE_EXCL : 0,
-      preserveTimestamps: target.preserveTimestamps ?? true,
-    };
-  });
+        return {
+          src: join(publicDir, target.src),
+          dest: target.dest ? join(themeRoot, target.dest) : themeAssetsDir,
+          cleanMatch: resolveCleanMatch(themeRoot, target, options.silent),
+          ignore: Array.isArray(target?.ignore)
+            ? target.ignore.map((_ignore) => normalizePath(join(publicDir, _ignore)))
+            : typeof target.ignore === 'string'
+              ? [normalizePath(join(publicDir, target.ignore))]
+              : [],
+          rename: target.rename,
+          dereference: target.dereference ?? true,
+          errorOnExist: target.force === 'error',
+          force: target.force === 'error' ? false : true,
+          mode: target.force === 'error' ? constants.COPYFILE_EXCL : 0,
+          preserveTimestamps: target.preserveTimestamps ?? true,
+        };
+      })
+    : [];
 
   return {
     publicDir,
     themeAssetsDir,
     themeRoot,
     targets,
-    onServe: options.onServe ?? true,
-    onBuild: options.onBuild ?? true,
-    onWatch: options.onWatch ?? true,
-    silent: options.silent ?? true,
+    onServe: options?.onServe ?? true,
+    onBuild: options?.onBuild ?? true,
+    onWatch: options?.onWatch ?? true,
+    silent: options?.silent ?? true,
   };
 };
 
