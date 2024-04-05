@@ -66,7 +66,7 @@ export const buildPlugin = ({
         }
       }
 
-      if (!existsSync(publicDir)) {
+      if (targets.length > 0 && !existsSync(publicDir)) {
         throw new Error(
           `[shopify-assets] publicDir does not exist: "${publicDir}". Either create it or set the correct path in plugin options.`,
         );
