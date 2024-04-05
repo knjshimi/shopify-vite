@@ -53,12 +53,6 @@ import shopifyAssets from 'vite-plugin-shopify-assets';
 
 export default defineConfig({
   plugins: [
-    // Barrel's vite-plugin-shopify
-    shopify({
-      themeRoot: 'theme',
-      sourceCodeDir: 'frontend',
-    }),
-
     // This plugin
     shopifyAssets({
       themeRoot: 'theme',
@@ -69,7 +63,6 @@ export default defineConfig({
         'fonts/*.{woff,woff2,ttf,otf,svg}',
         'images/*.{jpg,jpeg,gif,png,webp,svg}',
 
-
         // when targets are passed as objects, you can specify options
         {
           // glob pattern for source assets
@@ -78,7 +71,6 @@ export default defineConfig({
           // glob patterns to ignore
           ignore: ['other-ignored/**/*', 'icons/**/*', 'images/**/*'],
         },
-
 
         {
           // when a non-static asset (eg: used in js) also needs to be copied as a static asset,
@@ -102,6 +94,12 @@ export default defineConfig({
           cleanMatch: 'icon-*.liquid',
         },
       ],
+    }),
+
+    // Barrel's vite-plugin-shopify
+    shopify({
+      themeRoot: 'theme',
+      sourceCodeDir: 'frontend',
     }),
   ],
 });
