@@ -22,5 +22,6 @@
   },
   "dependencies": {
     "lodash-es": "^4.17.21"
-  }
+  },
+  "packageManager": "pnpm@8.15.6"
 }
