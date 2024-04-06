@@ -3,5 +3,5 @@ import shopify from 'vite-plugin-shopify';
 import shopifyAssets from 'vite-plugin-shopify-assets';
 
 export default defineConfig({
-  plugins: [shopifyAssets(), shopify()],
+  plugins: [shopify(), shopifyAssets()],
 });

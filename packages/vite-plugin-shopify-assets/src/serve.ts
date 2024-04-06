@@ -1,5 +1,5 @@
 import { parse, relative, resolve } from 'node:path';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdirSync } from 'node:fs';
 import { unlink } from 'node:fs/promises';
 
 import picomatch from 'picomatch';
@@ -40,6 +40,12 @@ export const servePlugin = ({
 
     configResolved(_config): void {
       logger = _config.logger;
+
+      if (targets.length > 0 && !existsSync(publicDir)) {
+        const relativePublicDir = relative(currentDir, publicDir);
+        logWarn(`Your publicDir does not exist - creating it at "${relativePublicDir}"`, logger);
+        mkdirSync(publicDir);
+      }
     },
 
     async buildStart(): Promise<void> {

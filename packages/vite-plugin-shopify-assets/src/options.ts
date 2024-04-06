@@ -143,14 +143,18 @@ export type PluginShopifyAssetsOptions = {
    *
    * This directory will always override vite's `config.publicDir`. If not set, it will default
    * to vite's `config.publicDir`. Note that by default, vite sets `config.publicDir` to root
-   * on serve - that option will be overwritten by the plugin on both modes.
+   * on serve - that option will be overwritten by the plugin on both modes. Also note that if
+   * the publicDir folder doesn't exist, the plugin will create it.
    *
    * @default <themeRoot>/public
    */
   publicDir?: string;
   /**
    * Array of targets to watch.
-   * It can be a string representing the source path or a Target object.
+   * It can be a string representing the source path or a Target object. The default is ['*'],
+   * which means that all files in the public directory will be copied to the theme assets directory.
+   *
+   * @default: ['*']
    */
   targets: Array<string | Target>;
   /**
@@ -234,7 +238,20 @@ export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPlu
           preserveTimestamps: target.preserveTimestamps ?? true,
         };
       })
-    : [];
+    : [
+        {
+          src: join(publicDir, '*'),
+          dest: resolve(themeRoot, themeAssetsDir),
+          cleanMatch: undefined,
+          ignore: [],
+          rename: undefined,
+          dereference: true,
+          errorOnExist: false,
+          force: true,
+          mode: 0,
+          preserveTimestamps: true,
+        },
+      ];
 
   return {
     publicDir,

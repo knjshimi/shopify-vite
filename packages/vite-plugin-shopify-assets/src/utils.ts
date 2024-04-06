@@ -1,10 +1,11 @@
-import { basename, dirname, relative, resolve, sep, parse } from 'node:path';
-import { cp, unlink } from 'node:fs/promises';
+import { basename, dirname, join, relative, resolve, sep, parse } from 'node:path';
+import { cp, unlink, readdir } from 'node:fs/promises';
 import pc from 'picocolors';
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
 import type { Logger, Manifest } from 'vite';
+import type { PreRenderedChunk } from 'rollup';
 import type { AssetMap } from './build.js';
 import type { ResolvedTarget, RenameFunc } from './options.js';
 
@@ -208,6 +209,14 @@ export const copyAllAssetMap = async (
   }
 };
 
+/**
+ * DEPRECATED
+ * Get all the files listed in the manifest
+ *
+ * @param manifest
+ * @returns array of files listed in the manifest
+ * @deprecated
+ */
 export const getFilesInManifest = (manifest: Manifest) => {
   const filesListedInImports = new Set(
     Object.values(manifest)
@@ -240,4 +249,50 @@ export const getFilesInManifest = (manifest: Manifest) => {
       return validFiles;
     })
     .flat();
+};
+
+export const getFilesToDeleteInBundle = async (
+  bundle: { [fileName: string]: PreRenderedChunk },
+  themeAssetsDir: string,
+) => {
+  if (!bundle || !Object.keys(bundle).length) {
+    return [];
+  }
+
+  const filesInAssetsDir = await readdir(themeAssetsDir);
+
+  const filesInBundle = Object.entries(bundle).reduce((acc, [key, chunk]) => {
+    if (key.startsWith('.vite/')) {
+      return [...acc, '.vite'];
+    }
+
+    if (chunk.type === 'asset') {
+      return [...acc, key];
+    }
+
+    if (chunk.type === 'chunk') {
+      const importedFiles = [] as string[];
+      if (chunk.viteMetadata?.importedCss?.size) {
+        chunk.viteMetadata.importedCss.forEach((cssFile) => {
+          importedFiles.push(cssFile);
+        });
+      }
+
+      if (chunk.viteMetadata?.importedAssets?.size) {
+        chunk.viteMetadata.importedAssets.forEach((assetFile) => {
+          importedFiles.push(assetFile);
+        });
+      }
+
+      return [...acc, key, ...importedFiles];
+    }
+
+    return acc;
+  }, [] as string[]);
+
+  const filesToDelete = filesInAssetsDir
+    .filter((file) => !filesInBundle.includes(file))
+    .map((file) => join(themeAssetsDir, file));
+
+  return filesToDelete;
 };

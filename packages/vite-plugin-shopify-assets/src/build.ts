@@ -1,14 +1,13 @@
 import { basename, dirname, join, relative, resolve } from 'node:path';
-import { unlink, readdir } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { unlink } from 'node:fs/promises';
+import { existsSync, mkdirSync } from 'node:fs';
 
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
-import { VITE_MANIFEST } from './constants.js';
-import { copyAllAssetMap, getFilesInManifest, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
+import { copyAllAssetMap, getFilesToDeleteInBundle, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
 
-import type { Logger, Manifest, Plugin, ResolvedConfig, UserConfig } from 'vite';
+import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
 import type { ResolvedTarget, ResolvedPluginShopifyAssetsOptions } from './options.js';
 
 export type AssetMap = Map<string, ResolvedTarget>;
@@ -24,7 +23,6 @@ export const buildPlugin = ({
 }: ResolvedPluginShopifyAssetsOptions): Plugin => {
   let logger: Logger;
   let clean: boolean;
-  let manifestFile: string | undefined;
   const currentDir = resolve();
 
   /**
@@ -66,12 +64,6 @@ export const buildPlugin = ({
         }
       }
 
-      if (targets.length > 0 && !existsSync(publicDir)) {
-        throw new Error(
-          `[shopify-assets] publicDir does not exist: "${publicDir}". Either create it or set the correct path in plugin options.`,
-        );
-      }
-
       // Set the `clean` variable to check if we should emptyOutDir (must be manually)
       //
       // TODO: we probably need to check if themeAssetsDir (outDir) is inside
@@ -98,14 +90,10 @@ export const buildPlugin = ({
     configResolved(_config: ResolvedConfig): void {
       logger = _config.logger;
 
-      // Users can modify the manifest file/location in vite.config.js
-      // vite-plugin-shopify should set build.manifest to true, which will use the default
-      // value of VITE_MANIFEST. But let's err on the safe side and double check
-      // that it has not been modified by the user.
-      if (_config.build.manifest === true) {
-        manifestFile = VITE_MANIFEST;
-      } else if (typeof _config.build.manifest === 'string') {
-        manifestFile = _config.build.manifest;
+      if (targets.length > 0 && !existsSync(publicDir)) {
+        const relativePublicDir = relative(currentDir, publicDir);
+        logWarn(`Your publicDir does not exist - creating it at "${relativePublicDir}"`, logger);
+        mkdirSync(publicDir);
       }
     },
 
@@ -155,33 +143,7 @@ export const buildPlugin = ({
     async writeBundle(_, bundle): Promise<void> {
       if (!clean) return;
 
-      if (!manifestFile) {
-        logWarn('Manifest not enabled in vite config build.manifest. Skipping clean.', logger, true);
-        return;
-      }
-
-      const manifestAsset = bundle[manifestFile];
-      if (!manifestAsset || !('source' in manifestAsset)) {
-        logWarn('Manifest file not found. Skipping clean.', logger, true);
-        return;
-      }
-
-      const manifest = JSON.parse(manifestAsset.source.toString()) as Manifest;
-      const filesInManifest = getFilesInManifest(manifest);
-      const filesInAssetDir = await readdir(themeAssetsDir);
-
-      const filesToDelete = filesInAssetDir
-        .filter((file) => {
-          // Vite will not let you delete the .vite directory,
-          // even if build.manifest (manifestFile below) was modified by the user
-          return !(
-            file === '.vite' ||
-            file === manifestFile ||
-            filesInManifest.includes(file) ||
-            assetFilesSet.has(file)
-          );
-        })
-        .map((file) => join(themeAssetsDir, file));
+      const filesToDelete = await getFilesToDeleteInBundle(bundle, themeAssetsDir);
 
       for (const target of assetMap.values()) {
         if (!target.cleanMatch) continue;
