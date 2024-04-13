@@ -46,6 +46,12 @@ export const servePlugin = ({
         logWarn(`Your publicDir does not exist - creating it at "${relativePublicDir}"`, logger);
         mkdirSync(publicDir);
       }
+
+      if (!existsSync(themeAssetsDir)) {
+        const relativeThemeAssetsDir = relative(currentDir, themeAssetsDir);
+        logWarn(`Your assets folder does not exist - creating it at ${relativeThemeAssetsDir}`, logger);
+        mkdirSync(themeAssetsDir);
+      }
     },
 
     async buildStart(): Promise<void> {
