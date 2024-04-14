@@ -209,48 +209,6 @@ export const copyAllAssetMap = async (
   }
 };
 
-/**
- * DEPRECATED
- * Get all the files listed in the manifest
- *
- * @param manifest
- * @returns array of files listed in the manifest
- * @deprecated
- */
-export const getFilesInManifest = (manifest: Manifest) => {
-  const filesListedInImports = new Set(
-    Object.values(manifest)
-      .map((block) => {
-        if ('imports' in block) {
-          return block.imports;
-        }
-
-        return [];
-      })
-      .flat(),
-  );
-
-  return Object.entries(manifest)
-    .map(([key, block]) => {
-      const file = block.file;
-      const validFiles: string[] = [];
-
-      // We're experiencing a manifest which is listing a file that isn't output so we'll check the imports to make sure all files are actually used. This typically only seems to be for imports which start with an _
-      if (key.startsWith('_') && filesListedInImports.has(key)) {
-        validFiles.push(file);
-      }
-
-      // Make sure we don't skip css files
-      if ('css' in block) {
-        validFiles.push(...(block.css as string[]));
-      }
-
-      validFiles.push(file);
-      return validFiles;
-    })
-    .flat();
-};
-
 export const getFilesToDeleteInBundle = async (
   bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset },
   themeAssetsDir: string,
