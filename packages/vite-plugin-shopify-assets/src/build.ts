@@ -74,9 +74,8 @@ export const buildPlugin = ({
       }
 
       // Set the `clean` variable to check if we should emptyOutDir (must be set manually)
-      //
-      // Check if themeAssetsDir is nested under themeRoot - if it is not, we should not clean it on build:
-      // https://vitejs.dev/config/build-options.html#build-emptyoutdir
+      // Check if themeAssetsDir is nested under themeRoot - if it is not, we should not clean it on build.
+      // Reference: https://vitejs.dev/config/build-options.html#build-emptyoutdir
       const isValidThemeAssetsDir = isChildDir(themeRoot, themeAssetsDir);
       if (_config?.build?.emptyOutDir !== false && !isValidThemeAssetsDir) {
         logWarnConsole(`Your theme assets directory is not located inside themeRoot. Clean will be disabled.`);
