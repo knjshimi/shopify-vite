@@ -211,8 +211,6 @@ export const buildPlugin = ({
 
         assetMap.delete(fileChanged);
         assetFilesSet.delete(basename(fileChanged));
-        const relativeDeleted = relative(themeRoot, asset.dest);
-        logEvent(event, relativeDeleted, logger);
       }
     },
 
