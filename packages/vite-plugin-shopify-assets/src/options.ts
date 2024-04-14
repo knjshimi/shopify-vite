@@ -4,6 +4,7 @@ import { constants } from 'node:fs/promises';
 import { normalizePath } from 'vite';
 import fg from 'fast-glob';
 
+import { logWarnConsole } from './utils.js';
 import { VITE_PUBLIC_DIRNAME, THEME_ASSETS_DIRNAME } from './constants.js';
 
 type MaybePromise<T> = T | Promise<T>;
@@ -279,8 +280,8 @@ function resolveCleanMatch(themeRoot: string, target: Target, silent: boolean = 
 
   if (!target.dest || target.dest === THEME_ASSETS_DIRNAME) {
     if (!silent) {
-      console.warn(
-        '[shopify-assets] WARNING: target.cleanMatch will have no effect when target.dest is not set or is equal to the default value.',
+      logWarnConsole(
+        'WARNING: target.cleanMatch will have no effect when target.dest is not set or is equal to the default value.',
       );
     }
     return undefined;
@@ -295,8 +296,8 @@ function resolveCleanMatch(themeRoot: string, target: Target, silent: boolean = 
       target.cleanMatch === '*.*')
   ) {
     if (!silent) {
-      console.warn(
-        '[shopify-assets] WARNING: target.cleanMatch pattern is too generic and will be disabled to prevent accidentally deleting files.',
+      logWarnConsole(
+        'WARNING: target.cleanMatch pattern is too generic and will be disabled to prevent accidentally deleting files.',
       );
     }
     return undefined;
