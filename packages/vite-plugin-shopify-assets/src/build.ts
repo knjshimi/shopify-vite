@@ -154,6 +154,9 @@ export const buildPlugin = ({
       const filesToDelete = new Set(filesToDeleteInBundle);
 
       for (const target of assetMap.values()) {
+        const keepFiles = await fg(target.dest);
+        if (keepFiles?.length) keepFiles.forEach((file) => filesToDelete.delete(file));
+
         if (!target.cleanMatch) continue;
         const otherRemovedFiles = await fg(target.cleanMatch, { ignore: [target.dest] });
         if (otherRemovedFiles?.length) filesToDelete.add(...otherRemovedFiles);
