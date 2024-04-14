@@ -210,6 +210,8 @@ export const copyAllAssetMap = async (
   if (!assetMap?.size) return;
 
   for (const [src, target] of assetMap.entries()) {
+    const fileExists = existsSync(target.dest);
+
     cp(src, target.dest, {
       dereference: target.dereference,
       errorOnExist: target.errorOnExist,
@@ -217,7 +219,9 @@ export const copyAllAssetMap = async (
       mode: target.mode,
       preserveTimestamps: target.preserveTimestamps,
     })
-      .then(() => logCopySuccess(target.dest, src, logger, options.timestamp))
+      .then(() => {
+        if (!fileExists) logCopySuccess(target.dest, src, logger, timestamp);
+      })
       .catch((error) => {
         logCopyError(target.dest, src, logger, options.timestamp);
         if (!options.silent) logger.error(error);
