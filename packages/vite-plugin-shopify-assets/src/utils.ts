@@ -172,10 +172,18 @@ export const deleteAsset = async (
 export const copyAllAssets = async (
   target: ResolvedTarget,
   logger: Logger,
-  options: { silent?: boolean; timestamp?: boolean } = { silent: true, timestamp: false },
+  options: {
+    silent?: boolean;
+    timestamp?: boolean;
+  } = {
+    silent: true,
+    timestamp: false,
+  },
 ): Promise<void> => {
   const assetFiles = await fg(normalizePath(target.src), { ignore: target.ignore });
   if (!assetFiles.length) return;
+
+  const { silent, timestamp } = options;
 
   for (const src of assetFiles) {
     const { base: file } = parse(src);
@@ -193,11 +201,11 @@ export const copyAllAssets = async (
       preserveTimestamps: target.preserveTimestamps,
     })
       .then(() => {
-        if (!fileExists) logCopySuccess(dest, src, logger, options.timestamp);
+        if (!fileExists) logCopySuccess(dest, src, logger, timestamp);
       })
       .catch((error) => {
-        logCopyError(dest, src, logger, options.timestamp);
-        if (!options.silent) logger.error(error);
+        logCopyError(dest, src, logger, timestamp);
+        if (!silent) logger.error(error);
       });
   }
 };
@@ -205,9 +213,17 @@ export const copyAllAssets = async (
 export const copyAllAssetMap = async (
   assetMap: AssetMap,
   logger: Logger,
-  options: { silent?: boolean; timestamp?: boolean } = { silent: true, timestamp: false },
+  options: {
+    silent?: boolean;
+    timestamp?: boolean;
+  } = {
+    silent: true,
+    timestamp: false,
+  },
 ): Promise<void> => {
   if (!assetMap?.size) return;
+
+  const { silent, timestamp } = options;
 
   for (const [src, target] of assetMap.entries()) {
     const fileExists = existsSync(target.dest);
@@ -223,8 +239,8 @@ export const copyAllAssetMap = async (
         if (!fileExists) logCopySuccess(target.dest, src, logger, timestamp);
       })
       .catch((error) => {
-        logCopyError(target.dest, src, logger, options.timestamp);
-        if (!options.silent) logger.error(error);
+        logCopyError(target.dest, src, logger, timestamp);
+        if (!silent) logger.error(error);
       });
   }
 };
