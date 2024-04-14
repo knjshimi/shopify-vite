@@ -9,7 +9,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "example/*"
+    "example/*",
+    "example-zero/*"
   ],
   "scripts": {
     "build": "turbo run build --filter=vite-plugin-*",
