@@ -4,8 +4,8 @@ import pc from 'picocolors';
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
-import type { Logger, Manifest } from 'vite';
-import type { PreRenderedChunk } from 'rollup';
+import type { Logger } from 'vite';
+import type { PreRenderedChunk, PreRenderedAsset } from 'rollup';
 import type { AssetMap } from './build.js';
 import type { ResolvedTarget, RenameFunc } from './options.js';
 
@@ -252,7 +252,7 @@ export const getFilesInManifest = (manifest: Manifest) => {
 };
 
 export const getFilesToDeleteInBundle = async (
-  bundle: { [fileName: string]: PreRenderedChunk },
+  bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset },
   themeAssetsDir: string,
 ) => {
   if (!bundle || !Object.keys(bundle).length) {

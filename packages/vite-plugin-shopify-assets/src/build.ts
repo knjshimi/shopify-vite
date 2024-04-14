@@ -8,6 +8,7 @@ import { normalizePath } from 'vite';
 import { copyAllAssetMap, getFilesToDeleteInBundle, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
 
 import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
+import type { PreRenderedChunk, PreRenderedAsset } from 'rollup';
 import type { ResolvedTarget, ResolvedPluginShopifyAssetsOptions } from './options.js';
 
 export type AssetMap = Map<string, ResolvedTarget>;
@@ -146,7 +147,7 @@ export const buildPlugin = ({
       }
     },
 
-    async writeBundle(_, bundle): Promise<void> {
+    async writeBundle(_, bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset }): Promise<void> {
       if (!clean) return;
 
       const filesToDelete = await getFilesToDeleteInBundle(bundle, themeAssetsDir);
@@ -180,7 +181,7 @@ export const buildPlugin = ({
       }
     },
 
-    async watchChange(fileChanged, { event }): Promise<void> {
+    async watchChange(fileChanged: string, { event }): Promise<void> {
       // Check if the file changed is in our watched assets directory
       // If it's not, we don't care about it.
       if (!assetDirSet.has(dirname(fileChanged))) {
