@@ -150,16 +150,17 @@ export const buildPlugin = ({
     async writeBundle(_, bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset }): Promise<void> {
       if (!clean) return;
 
-      const filesToDelete = await getFilesToDeleteInBundle(bundle, themeAssetsDir);
+      const filesToDeleteInBundle = await getFilesToDeleteInBundle(bundle, themeAssetsDir);
+      const filesToDelete = new Set(filesToDeleteInBundle);
 
       for (const target of assetMap.values()) {
         if (!target.cleanMatch) continue;
         const otherRemovedFiles = await fg(target.cleanMatch, { ignore: [target.dest] });
-        filesToDelete.push(...otherRemovedFiles);
+        if (otherRemovedFiles?.length) filesToDelete.add(...otherRemovedFiles);
       }
 
       await Promise.all(
-        filesToDelete.map(async (file) => {
+        Array.from(filesToDelete).map(async (file) => {
           return existsSync(file) ? unlink(file).then(() => Promise.resolve(file)) : Promise.resolve(file);
         }),
       )
