@@ -219,13 +219,13 @@ export const getFilesToDeleteInBundle = async (
 
   const filesInAssetsDir = await readdir(themeAssetsDir);
 
-  const filesInBundle = Object.entries(bundle).reduce((acc, [key, chunk]) => {
-    if (key.startsWith('.vite/')) {
+  const filesInBundle = Object.entries(bundle).reduce((acc, [fileName, chunk]) => {
+    if (fileName.startsWith('.vite/')) {
       return [...acc, '.vite'];
     }
 
     if (chunk.type === 'asset') {
-      return [...acc, key];
+      return [...acc, fileName];
     }
 
     if (chunk.type === 'chunk') {
@@ -242,7 +242,7 @@ export const getFilesToDeleteInBundle = async (
         });
       }
 
-      return [...acc, key, ...importedFiles];
+      return [...acc, fileName, ...importedFiles];
     }
 
     return acc;
