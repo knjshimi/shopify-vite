@@ -192,10 +192,9 @@ export type ResolvedPluginShopifyAssetsOptions = {
 };
 
 export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPluginShopifyAssetsOptions => {
-  // Note that for glob patterns we need to use Vite's normalizePath
+  // Note: use Vite's normalizePath when using paths (eg: join, resolve)
   // It will convert Windows paths to POSIX for path comparation
   // Vite: https://vitejs.dev/guide/api-plugin#path-normalization
-  // TODO: Test the assumption above on windows
 
   const publicDir = options?.publicDir ? resolve(options.publicDir) : resolve(process.cwd(), VITE_PUBLIC_DIRNAME);
   const themeRoot = options?.themeRoot ? resolve(options.themeRoot) : resolve(process.cwd());
