@@ -29,6 +29,7 @@ export const servePlugin = ({
   onServe,
 }: ResolvedPluginShopifyAssetsOptions): Plugin => {
   let logger: Logger;
+  const currentDir = resolve();
 
   return {
     name: 'vite-plugin-shopify-assets:serve',
