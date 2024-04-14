@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "watch": "vite build --watch",
     "start": "vite build --watch",
     "shopify:dev": "shopify theme dev -e dev",
     "shopify:deploy": "shopify theme push -e dev",
