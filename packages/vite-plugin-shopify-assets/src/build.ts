@@ -197,6 +197,13 @@ export const buildPlugin = ({
       // - remove it from the asset map.
       // - remove it from the asset files set.
       if (event === 'delete') {
+        if (existsSync(asset.dest)) {
+          unlink(asset.dest).then(() => {
+            const relativeDeleted = relative(themeRoot, asset.dest);
+            logEvent(event, relativeDeleted, logger);
+          });
+        }
+
         assetMap.delete(fileChanged);
         assetFilesSet.delete(basename(fileChanged));
         const relativeDeleted = relative(themeRoot, asset.dest);
