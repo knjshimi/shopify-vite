@@ -1,4 +1,5 @@
 import { basename, dirname, join, relative, resolve, sep, parse } from 'node:path';
+import { existsSync } from 'node:fs';
 import { cp, unlink, readdir } from 'node:fs/promises';
 import pc from 'picocolors';
 import fg from 'fast-glob';
@@ -55,41 +56,51 @@ export const logInfo = (message: string, logger: Logger, timestamp: boolean = fa
 
 export const logWarnConsole = (message: string) => logMessageConsole(message, 'warn');
 
-export const logCopySuccess = (dest: string, src: string, themeRoot: string, logger: Logger, timestamp = false) => {
+export const logCopySuccess = (dest: string, src: string, logger: Logger, timestamp = false) => {
   logger.info(
-    pc.dim(`[shopify-assets] ${relative(themeRoot, dirname(dest))}${sep}`) +
+    pc.dim(`[shopify-assets] ${relative(process.cwd(), dirname(dest))}${sep}`) +
       pc.green(basename(dest)) +
-      pc.dim(` from ${relative(themeRoot, dirname(src))}`),
+      pc.dim(` copied from ${relative(process.cwd(), dirname(src))}`),
     { timestamp },
   );
 };
 
-export const logCopyError = (dest: string, src: string, themeRoot: string, logger: Logger, timestamp = false) => {
+export const logCopyError = (dest: string, src: string, logger: Logger, timestamp = false) => {
   logger.info(
-    pc.dim(`[shopify-assets] could not copy ${relative(themeRoot, dirname(dest))}${sep}`) +
+    pc.dim(`[shopify-assets] could not copy ${relative(process.cwd(), dirname(dest))}${sep}`) +
       pc.red(basename(dest)) +
-      pc.dim(` from ${relative(themeRoot, dirname(src))}`),
+      pc.dim(` from ${relative(process.cwd(), dirname(src))}`),
     { timestamp },
   );
 };
 
-export const logEvent = (type: 'create' | 'update' | 'delete', path: string, logger: Logger) => {
+export const logEvent = (
+  type: 'create' | 'update' | 'delete',
+  path: string,
+  logger: Logger,
+  timestamp: boolean = false,
+) => {
   const color = type === 'delete' ? pc.red : type === 'create' ? pc.green : type === 'update' ? pc.cyan : pc.dim;
 
   logger.info(
     pc.dim(`[shopify-assets] ${dirname(path)}${path.includes(sep) ? sep : ''}`) +
       color(basename(path)) +
       pc.dim(` ${type}d`),
-    { timestamp: true },
+    { timestamp },
   );
 };
 
-export const logEventIgnored = (type: 'create' | 'update' | 'delete', path: string, logger: Logger) => {
+export const logEventIgnored = (
+  type: 'create' | 'update' | 'delete',
+  path: string,
+  logger: Logger,
+  timestamp: boolean = false,
+) => {
   logger.info(
     pc.dim(`[shopify-assets] ${dirname(path)}${path.includes(sep) ? sep : ''}`) +
       pc.yellow(basename(path)) +
       pc.dim(` ${type} ignored`),
-    { timestamp: true },
+    { timestamp },
   );
 };
 
@@ -103,7 +114,6 @@ export const renameFile = async (file: string, src: string, rename: string | Ren
 };
 
 export const copyAsset = async (
-  themeRoot: string,
   target: ResolvedTarget,
   fileChanged: string,
   event: 'create' | 'update',
@@ -115,7 +125,7 @@ export const copyAsset = async (
     ? resolve(target.dest, await renameFile(file, file, target.rename))
     : resolve(target.dest, file);
 
-  const relativePath = relative(themeRoot, destPath);
+  const relativePath = relative(process.cwd(), destPath);
 
   cp(fileChanged, destPath, {
     dereference: target.dereference,
@@ -124,15 +134,14 @@ export const copyAsset = async (
     mode: target.mode,
     preserveTimestamps: target.preserveTimestamps,
   })
-    .then(() => logEvent(event, relativePath, logger))
+    .then(() => logEvent(event, relativePath, logger, true))
     .catch((reason) => {
-      logError(`could not create ${relativePath}`, logger);
+      logError(`could not create ${relativePath}`, logger, true);
       if (!silent) logger.error(reason);
     });
 };
 
 export const deleteAsset = async (
-  themeRoot: string,
   target: ResolvedTarget,
   fileChanged: string,
   event: 'delete',
@@ -145,19 +154,18 @@ export const deleteAsset = async (
     ? resolve(target.dest, await renameFile(file, file, target.rename))
     : resolve(target.dest, file);
 
-  const relativePath = relative(themeRoot, destPath);
+  const relativePath = relative(process.cwd(), destPath);
 
   unlink(destPath)
-    .then(() => logEvent(event, relativePath, logger))
+    .then(() => logEvent(event, relativePath, logger, true))
     .catch((reason) => {
-      logError(`could not delete ${relativePath}`, logger);
+      logError(`Could not delete ${relativePath}`, logger, true);
       if (!silent) logger.error(reason);
     });
 };
 
 export const copyAllAssets = async (
   target: ResolvedTarget,
-  themeRoot: string,
   logger: Logger,
   options: { silent?: boolean; timestamp?: boolean } = { silent: true, timestamp: false },
 ): Promise<void> => {
@@ -170,6 +178,8 @@ export const copyAllAssets = async (
       ? resolve(target.dest, await renameFile(file, src, target.rename))
       : resolve(target.dest, file);
 
+    const fileExists = existsSync(dest);
+
     cp(src, dest, {
       dereference: target.dereference,
       errorOnExist: target.errorOnExist,
@@ -177,9 +187,11 @@ export const copyAllAssets = async (
       mode: target.mode,
       preserveTimestamps: target.preserveTimestamps,
     })
-      .then(() => logCopySuccess(dest, src, themeRoot, logger, options.timestamp))
+      .then(() => {
+        if (!fileExists) logCopySuccess(dest, src, logger, options.timestamp);
+      })
       .catch((error) => {
-        logCopyError(dest, src, themeRoot, logger, options.timestamp);
+        logCopyError(dest, src, logger, options.timestamp);
         if (!options.silent) logger.error(error);
       });
   }
@@ -187,7 +199,6 @@ export const copyAllAssets = async (
 
 export const copyAllAssetMap = async (
   assetMap: AssetMap,
-  themeRoot: string,
   logger: Logger,
   options: { silent?: boolean; timestamp?: boolean } = { silent: true, timestamp: false },
 ): Promise<void> => {
@@ -201,9 +212,9 @@ export const copyAllAssetMap = async (
       mode: target.mode,
       preserveTimestamps: target.preserveTimestamps,
     })
-      .then(() => logCopySuccess(target.dest, src, themeRoot, logger, options.timestamp))
+      .then(() => logCopySuccess(target.dest, src, logger, options.timestamp))
       .catch((error) => {
-        logCopyError(target.dest, src, themeRoot, logger, options.timestamp);
+        logCopyError(target.dest, src, logger, options.timestamp);
         if (!options.silent) logger.error(error);
       });
   }

@@ -92,7 +92,7 @@ export const servePlugin = ({
             if (!results.length) return;
             for (const fileDeleted of results) {
               const relativePath = relative(themeRoot, fileDeleted);
-              logEvent('delete', relativePath, logger);
+              logEvent('delete', relativePath, logger, true);
             }
           })
           .catch((reason) => {
@@ -102,7 +102,7 @@ export const servePlugin = ({
 
       // Copy all assets to the theme assets directory.
       for (const target of targets) {
-        copyAllAssets(target, themeRoot, logger, { silent, timestamp: true });
+        copyAllAssets(target, logger, { silent, timestamp: true });
       }
     },
 
@@ -114,18 +114,18 @@ export const servePlugin = ({
 
       if (target.ignore.some((glob) => picomatch(glob)(fileChanged))) {
         const relativeIgnored = relative(themeAssetsDir, fileChanged);
-        logEventIgnored(event, relativeIgnored, logger);
+        logEventIgnored(event, relativeIgnored, logger, true);
         return;
       }
 
       switch (event) {
         case 'create':
         case 'update':
-          copyAsset(themeRoot, target, fileChanged, event, logger, silent);
+          copyAsset(target, fileChanged, event, logger, silent);
           break;
 
         case 'delete':
-          deleteAsset(themeRoot, target, fileChanged, event, logger, silent);
+          deleteAsset(target, fileChanged, event, logger, silent);
           break;
 
         default:

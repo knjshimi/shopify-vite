@@ -170,7 +170,7 @@ export const buildPlugin = ({
         .then((results) => {
           if (!results.length) return;
           for (const fileDeleted of results) {
-            const relativePath = relative(themeRoot, fileDeleted);
+            const relativePath = relative(process.cwd(), fileDeleted);
             logEvent('delete', relativePath, logger);
           }
         })
@@ -181,7 +181,7 @@ export const buildPlugin = ({
 
     async closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
-        copyAllAssetMap(assetMap, themeRoot, logger, { silent, timestamp: false });
+        copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
       }
     },
 
@@ -216,7 +216,7 @@ export const buildPlugin = ({
 
     async closeWatcher(): Promise<void> {
       // Copy all assets on close to make sure they're up to date.
-      await copyAllAssetMap(assetMap, themeRoot, logger, { silent, timestamp: false });
+      await copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
     },
   };
 };
