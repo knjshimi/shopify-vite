@@ -7,7 +7,7 @@ import { normalizePath } from 'vite';
 
 import {
   copyAllAssetMap,
-  getFilesToDeleteInBundle,
+  getFilesToDeleteInThemeAssets,
   isChildDir,
   logEvent,
   logWarn,
@@ -160,8 +160,7 @@ export const buildPlugin = ({
     async writeBundle(_, bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset }): Promise<void> {
       if (!clean) return;
 
-      const filesToDeleteInBundle = await getFilesToDeleteInBundle(bundle, themeAssetsDir);
-      const filesToDelete = new Set(filesToDeleteInBundle);
+      const filesToDelete = new Set(await getFilesToDeleteInThemeAssets(themeAssetsDir, bundle));
 
       for (const target of assetMap.values()) {
         const keepFiles = await fg(target.dest);

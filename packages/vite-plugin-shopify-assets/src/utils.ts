@@ -225,9 +225,9 @@ export const copyAllAssetMap = async (
   }
 };
 
-export const getFilesToDeleteInBundle = async (
-  bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset },
+export const getFilesToDeleteInThemeAssets = async (
   themeAssetsDir: string,
+  bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset },
 ) => {
   if (!bundle || !Object.keys(bundle).length) {
     return [];
