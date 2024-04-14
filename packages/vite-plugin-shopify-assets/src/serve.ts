@@ -44,13 +44,19 @@ export const servePlugin = ({
 
       if (targets.length > 0 && !existsSync(publicDir)) {
         const relativePublicDir = relative(currentDir, publicDir);
-        logWarn(`Your publicDir does not exist - creating it at "${relativePublicDir}"`, logger);
+        logWarn(
+          `Your publicDir does not exist, creating it at ${relativePublicDir}/ - Use this folder to store the source static assets for your Shopify theme`,
+          logger,
+        );
         mkdirSync(publicDir);
       }
 
       if (!existsSync(themeAssetsDir)) {
         const relativeThemeAssetsDir = relative(currentDir, themeAssetsDir);
-        logWarn(`Your assets folder does not exist - creating it at ${relativeThemeAssetsDir}`, logger);
+        logWarn(
+          `Your Shopify theme assets folder does not exist - creating it at ${relativeThemeAssetsDir}/ - Your static assets will be copied to this folder`,
+          logger,
+        );
         mkdirSync(themeAssetsDir);
       }
     },
