@@ -5,7 +5,15 @@ import { existsSync, mkdirSync } from 'node:fs';
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
-import { copyAllAssetMap, getFilesToDeleteInBundle, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
+import {
+  copyAllAssetMap,
+  getFilesToDeleteInBundle,
+  isChildDir,
+  logEvent,
+  logWarn,
+  logWarnConsole,
+  renameFile,
+} from './utils.js';
 
 import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
 import type { PreRenderedChunk, PreRenderedAsset } from 'rollup';
@@ -65,14 +73,16 @@ export const buildPlugin = ({
         }
       }
 
-      // Set the `clean` variable to check if we should emptyOutDir (must be manually)
+      // Set the `clean` variable to check if we should emptyOutDir (must be set manually)
       //
-      // TODO: we probably need to check if themeAssetsDir (outDir) is inside
-      // themeRoot(root maybe ?) - if it is not, we should not clean it on build.
-      // That will mimic Vite's default behaviour for emptyOutDir.
-      //
+      // Check if themeAssetsDir is nested under themeRoot - if it is not, we should not clean it on build:
       // https://vitejs.dev/config/build-options.html#build-emptyoutdir
-      clean = _config?.build?.emptyOutDir !== false;
+      const isValidThemeAssetsDir = isChildDir(themeRoot, themeAssetsDir);
+      if (_config?.build?.emptyOutDir !== false && !isValidThemeAssetsDir) {
+        logWarnConsole(`Your theme assets directory is not located inside themeRoot. Clean will be disabled.`);
+      }
+
+      clean = _config?.build?.emptyOutDir !== false && isValidThemeAssetsDir;
 
       return {
         publicDir,

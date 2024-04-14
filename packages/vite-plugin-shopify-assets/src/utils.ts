@@ -1,4 +1,4 @@
-import { basename, dirname, join, relative, resolve, sep, parse } from 'node:path';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep, parse } from 'node:path';
 import { existsSync } from 'node:fs';
 import { cp, unlink, readdir } from 'node:fs/promises';
 import pc from 'picocolors';
@@ -102,6 +102,11 @@ export const logEventIgnored = (
       pc.dim(` ${type} ignored`),
     { timestamp },
   );
+};
+
+export const isChildDir = (base: string, target: string) => {
+  const relation = relative(base, target);
+  return relation !== '' && !relation.startsWith('..') && !isAbsolute(relation);
 };
 
 export const renameFile = async (file: string, src: string, rename: string | RenameFunc): Promise<string> => {
