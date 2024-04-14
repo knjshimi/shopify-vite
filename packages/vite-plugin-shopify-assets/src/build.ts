@@ -1,4 +1,4 @@
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { basename, dirname, relative, resolve } from 'node:path';
 import { unlink } from 'node:fs/promises';
 import { existsSync, mkdirSync } from 'node:fs';
 
