@@ -82,8 +82,8 @@ export const servePlugin = ({
         for (const src of assetFiles) {
           const { base: file } = parse(src);
           const resolvedDest = target.rename
-            ? resolve(target.dest, await renameFile(file, src, target.rename))
-            : resolve(target.dest, file);
+            ? normalizePath(resolve(target.dest, await renameFile(file, src, target.rename)))
+            : normalizePath(resolve(target.dest, file));
           filesToKeep.push(resolvedDest);
         }
 

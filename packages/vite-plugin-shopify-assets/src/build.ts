@@ -130,18 +130,18 @@ export const buildPlugin = ({
 
         for (const file of assetFiles) {
           const fileName = target.rename ? await renameFile(basename(file), file, target.rename) : basename(file);
-          const resolvedDest = join(target.dest, fileName);
+          const resolvedDest = normalizePath(resolve(target.dest, fileName));
 
           // Static assets are not watched in Vite/Rollup, so we
           // collect all relevant asset directories to watch.
           if (onWatch && this.meta.watchMode) {
-            assetDirSet.add(resolve(themeAssetsDir, dirname(file)));
+            assetDirSet.add(normalizePath(resolve(themeAssetsDir, dirname(file))));
           }
 
           // Check if the asset is a duplicate.
           if (assetDestSet.has(resolvedDest)) {
             if (!silent) {
-              const relativeDupeSrc = relative(publicDir, file);
+              const relativeDupeSrc = normalizePath(relative(publicDir, file));
               logWarn(`Duplicate asset found. Ignoring ${relativeDupeSrc}`, logger, true);
             }
             continue;
@@ -216,8 +216,9 @@ export const buildPlugin = ({
       // - remove it from the asset map.
       // - remove it from the asset files set.
       if (event === 'delete') {
-        if (existsSync(asset.dest)) {
-          unlink(asset.dest).then(() => {
+        const normalizedDest = normalizePath(asset.dest);
+        if (existsSync(normalizedDest)) {
+          unlink(normalizedDest).then(() => {
             const relativeDeleted = relative(themeRoot, asset.dest);
             logEvent(event, relativeDeleted, logger);
           });

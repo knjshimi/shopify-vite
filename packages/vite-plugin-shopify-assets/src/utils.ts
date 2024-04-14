@@ -188,8 +188,8 @@ export const copyAllAssets = async (
   for (const src of assetFiles) {
     const { base: file } = parse(src);
     const dest = target.rename
-      ? resolve(target.dest, await renameFile(file, src, target.rename))
-      : resolve(target.dest, file);
+      ? normalizePath(resolve(target.dest, await renameFile(file, src, target.rename)))
+      : normalizePath(resolve(target.dest, file));
 
     const fileExists = existsSync(dest);
 
@@ -286,7 +286,7 @@ export const getFilesToDeleteInThemeAssets = async (
 
   const filesToDelete = filesInAssetsDir
     .filter((file) => !filesInBundle.includes(file))
-    .map((file) => join(themeAssetsDir, file));
+    .map((file) => normalizePath(join(themeAssetsDir, file)));
 
   return filesToDelete;
 };

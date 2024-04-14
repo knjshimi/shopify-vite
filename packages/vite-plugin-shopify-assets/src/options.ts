@@ -205,8 +205,8 @@ export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPlu
     ? options.targets.map((target: Target | string): ResolvedTarget => {
         if (typeof target === 'string') {
           return {
-            src: join(publicDir, target),
-            dest: resolve(themeRoot, themeAssetsDir),
+            src: normalizePath(join(publicDir, target)),
+            dest: normalizePath(resolve(themeRoot, themeAssetsDir)),
             cleanMatch: undefined,
             ignore: [],
             rename: undefined,
@@ -223,8 +223,8 @@ export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPlu
         }
 
         return {
-          src: join(publicDir, target.src),
-          dest: target.dest ? join(themeRoot, target.dest) : themeAssetsDir,
+          src: normalizePath(join(publicDir, target.src)),
+          dest: normalizePath(target.dest ? join(themeRoot, target.dest) : themeAssetsDir),
           cleanMatch: resolveCleanMatch(themeRoot, target, options.silent),
           ignore: Array.isArray(target?.ignore)
             ? target.ignore.map((_ignore) => normalizePath(join(publicDir, _ignore)))
@@ -241,8 +241,8 @@ export const resolveOptions = (options: PluginShopifyAssetsOptions): ResolvedPlu
       })
     : [
         {
-          src: join(publicDir, '*'),
-          dest: resolve(themeRoot, themeAssetsDir),
+          src: normalizePath(join(publicDir, '*')),
+          dest: normalizePath(resolve(themeRoot, themeAssetsDir)),
           cleanMatch: undefined,
           ignore: [],
           rename: undefined,
