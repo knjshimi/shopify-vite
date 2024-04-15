@@ -6,7 +6,7 @@ import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
 import type { Logger } from 'vite';
-import type { PreRenderedChunk, PreRenderedAsset } from 'rollup';
+import type { RenderedChunk } from 'rollup';
 import type { AssetMap } from './build.js';
 import type { ResolvedTarget, RenameFunc } from './options.js';
 
@@ -247,7 +247,7 @@ export const copyAllAssetMap = (
 
 export const getFilesToDeleteInThemeAssets = async (
   themeAssetsDir: string,
-  bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset },
+  bundle: { [fileName: string]: RenderedChunk },
 ) => {
   if (!bundle || !Object.keys(bundle).length) {
     return [];

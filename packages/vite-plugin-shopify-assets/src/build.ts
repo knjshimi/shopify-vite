@@ -16,7 +16,7 @@ import {
 } from './utils.js';
 
 import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
-import type { PreRenderedChunk, PreRenderedAsset } from 'rollup';
+import type { RenderedChunk } from 'rollup';
 import type { ResolvedTarget, ResolvedPluginShopifyAssetsOptions } from './options.js';
 
 export type AssetMap = Map<string, ResolvedTarget>;
@@ -162,7 +162,7 @@ export const buildPlugin = ({
       }
     },
 
-    async writeBundle(_, bundle: { [fileName: string]: PreRenderedChunk | PreRenderedAsset }): Promise<void> {
+    async writeBundle(_, bundle: { [fileName: string]: RenderedChunk }): Promise<void> {
       if (!clean) return;
 
       const filesToDelete = new Set(await getFilesToDeleteInThemeAssets(themeAssetsDir, bundle));
