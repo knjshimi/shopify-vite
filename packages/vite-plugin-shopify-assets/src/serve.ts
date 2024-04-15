@@ -6,19 +6,10 @@ import picomatch from 'picomatch';
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
-import {
-  copyAllAssets,
-  copyAsset,
-  deleteAsset,
-  logError,
-  logEvent,
-  logEventIgnored,
-  logWarn,
-  renameFile,
-} from './utils';
+import { copyAllAssets, copyAsset, deleteAsset, logEvent, logEventIgnored, logWarn, renameFile } from './utils.js';
 
 import type { Logger, Plugin } from 'vite';
-import type { ResolvedPluginShopifyAssetsOptions } from './options';
+import type { ResolvedPluginShopifyAssetsOptions } from './options.js';
 
 export const servePlugin = ({
   publicDir,
@@ -109,11 +100,13 @@ export const servePlugin = ({
 
       // Copy all assets to the theme assets directory.
       for (const target of targets) {
-        copyAllAssets(target, logger, { silent, timestamp: true });
+        copyAllAssets(target, logger, { silent, timestamp: true }).catch((error: Error) => {
+          if (!silent) logger.error(error);
+        });
       }
     },
 
-    watchChange(fileChanged, { event }): Promise<void> {
+    watchChange(fileChanged: string, { event }): Promise<void> {
       if (!onServe) return;
 
       const target = targets.find((_target) => picomatch(_target.src)(fileChanged));
@@ -128,15 +121,15 @@ export const servePlugin = ({
       switch (event) {
         case 'create':
         case 'update':
-          copyAsset(target, fileChanged, event, logger, silent);
+          copyAsset(target, fileChanged, event, logger, silent).catch((error: Error) => {
+            if (!silent) logger.error(error);
+          });
           break;
 
         case 'delete':
-          deleteAsset(target, fileChanged, event, logger, silent);
-          break;
-
-        default:
-          if (!silent) logError(`Unexpected event: ${event}`, logger, true);
+          deleteAsset(target, fileChanged, event, logger, silent).catch((error: Error) => {
+            if (!silent) logger.error(error);
+          });
           break;
       }
     },

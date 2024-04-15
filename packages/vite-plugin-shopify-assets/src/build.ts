@@ -196,7 +196,7 @@ export const buildPlugin = ({
     closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
         copyAllAssetMap(assetMap, logger, { silent, timestamp: false }).catch((error: Error) => {
-          if (!silent) logger.info(error);
+          if (!silent) logger.error(error);
         });
       }
     },
@@ -226,7 +226,7 @@ export const buildPlugin = ({
               logEvent(event, relativeDeleted, logger);
             })
             .catch((error: Error) => {
-              if (!silent) logger.info(error);
+              if (!silent) logger.error(error);
             });
         }
 
