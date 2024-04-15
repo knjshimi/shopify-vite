@@ -195,7 +195,9 @@ export const buildPlugin = ({
 
     async closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
-        copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
+        copyAllAssetMap(assetMap, logger, { silent, timestamp: false }).catch((error: Error) => {
+          if (!silent) logger.info(error);
+        });
       }
     },
 
@@ -218,10 +220,14 @@ export const buildPlugin = ({
       if (event === 'delete') {
         const normalizedDest = normalizePath(asset.dest);
         if (existsSync(normalizedDest)) {
-          unlink(normalizedDest).then(() => {
-            const relativeDeleted = relative(themeRoot, asset.dest);
-            logEvent(event, relativeDeleted, logger);
-          });
+          unlink(normalizedDest)
+            .then(() => {
+              const relativeDeleted = relative(themeRoot, asset.dest);
+              logEvent(event, relativeDeleted, logger);
+            })
+            .catch((error: Error) => {
+              if (!silent) logger.info(error);
+            });
         }
 
         assetMap.delete(fileChanged);
