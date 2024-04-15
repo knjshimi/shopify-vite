@@ -113,7 +113,7 @@ export const servePlugin = ({
       }
     },
 
-    async watchChange(fileChanged, { event }): Promise<void> {
+    watchChange(fileChanged, { event }): Promise<void> {
       if (!onServe) return;
 
       const target = targets.find((_target) => picomatch(_target.src)(fileChanged));

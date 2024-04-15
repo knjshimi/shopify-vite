@@ -193,7 +193,7 @@ export const buildPlugin = ({
         });
     },
 
-    async closeBundle(): Promise<void> {
+    closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
         copyAllAssetMap(assetMap, logger, { silent, timestamp: false }).catch((error: Error) => {
           if (!silent) logger.info(error);
@@ -201,7 +201,7 @@ export const buildPlugin = ({
       }
     },
 
-    async watchChange(fileChanged: string, { event }): Promise<void> {
+    watchChange(fileChanged: string, { event }): Promise<void> {
       // Check if the file changed is in our watched assets directory
       // If it's not, we don't care about it.
       if (!assetDirSet.has(dirname(fileChanged))) {
