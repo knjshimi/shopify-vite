@@ -15,5 +15,5 @@
     "vite-plugin-shopify": "^3.0.1",
     "vite-plugin-shopify-assets": "workspace:*"
   },
-  "packageManager": "pnpm@8.15.6"
+  "packageManager": "pnpm@8.15.7"
 }
