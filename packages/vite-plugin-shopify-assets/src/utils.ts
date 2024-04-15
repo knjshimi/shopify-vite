@@ -140,9 +140,9 @@ export const copyAsset = async (
     preserveTimestamps: target.preserveTimestamps,
   })
     .then(() => logEvent(event, relativePath, logger, true))
-    .catch((reason) => {
+    .catch((error: Error) => {
       logError(`could not create ${relativePath}`, logger, true);
-      if (!silent) logger.error(reason);
+      if (!silent) logger.error(error);
     });
 };
 
@@ -163,9 +163,9 @@ export const deleteAsset = async (
 
   unlink(destPath)
     .then(() => logEvent(event, relativePath, logger, true))
-    .catch((reason) => {
+    .catch((error: Error) => {
       logError(`Could not delete ${relativePath}`, logger, true);
-      if (!silent) logger.error(reason);
+      if (!silent) logger.error(error);
     });
 };
 
@@ -203,14 +203,14 @@ export const copyAllAssets = async (
       .then(() => {
         if (!fileExists) logCopySuccess(dest, src, logger, timestamp);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         logCopyError(dest, src, logger, timestamp);
         if (!silent) logger.error(error);
       });
   }
 };
 
-export const copyAllAssetMap = async (
+export const copyAllAssetMap = (
   assetMap: AssetMap,
   logger: Logger,
   options: {
@@ -238,7 +238,7 @@ export const copyAllAssetMap = async (
       .then(() => {
         if (!fileExists) logCopySuccess(target.dest, src, logger, timestamp);
       })
-      .catch((error) => {
+      .catch((error: Error) => {
         logCopyError(target.dest, src, logger, timestamp);
         if (!silent) logger.error(error);
       });

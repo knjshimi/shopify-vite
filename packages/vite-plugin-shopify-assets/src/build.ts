@@ -188,8 +188,8 @@ export const buildPlugin = ({
             logEvent('delete', relativePath, logger);
           }
         })
-        .catch((reason) => {
-          if (!silent) logger.error(reason);
+        .catch((error: Error) => {
+          if (!silent) logger.error(error);
         });
     },
 

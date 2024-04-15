@@ -102,8 +102,8 @@ export const servePlugin = ({
               logEvent('delete', relativePath, logger, true);
             }
           })
-          .catch((reason) => {
-            if (!silent) logger.error(reason);
+          .catch((error: Error) => {
+            if (!silent) logger.error(error);
           });
       }
 
