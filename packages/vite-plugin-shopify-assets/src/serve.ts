@@ -100,9 +100,7 @@ export const servePlugin = ({
 
       // Copy all assets to the theme assets directory.
       for (const target of targets) {
-        copyAllAssets(target, logger, { silent, timestamp: true }).catch((error: Error) => {
-          if (!silent) logger.error(error);
-        });
+        copyAllAssets(target, logger, { silent, timestamp: true });
       }
     },
 

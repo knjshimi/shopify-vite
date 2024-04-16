@@ -179,7 +179,7 @@ export const copyAllAssets = async (
     silent: true,
     timestamp: false,
   },
-): Promise<void> => {
+): void => {
   const assetFiles = await fg(normalizePath(target.src), { ignore: target.ignore });
   if (!assetFiles.length) return;
 
@@ -220,7 +220,7 @@ export const copyAllAssetMap = (
     silent: true,
     timestamp: false,
   },
-): Promise<void> => {
+): void => {
   if (!assetMap?.size) return;
 
   const { silent, timestamp } = options;

@@ -195,9 +195,7 @@ export const buildPlugin = ({
 
     closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
-        copyAllAssetMap(assetMap, logger, { silent, timestamp: false }).catch((error: Error) => {
-          if (!silent) logger.error(error);
-        });
+        copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
       }
     },
 
@@ -235,9 +233,9 @@ export const buildPlugin = ({
       }
     },
 
-    async closeWatcher(): Promise<void> {
+    closeWatcher(): Promise<void> {
       // Copy all assets on close to make sure they're up to date.
-      await copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
+      copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
     },
   };
 };
