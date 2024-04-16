@@ -1,19 +1,11 @@
-import { basename, dirname, relative, resolve } from 'node:path';
+import { basename, join, dirname, relative, resolve } from 'node:path';
 import { unlink } from 'node:fs/promises';
-import { existsSync, mkdirSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 
 import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
-import {
-  copyAllAssetMap,
-  getFilesToDeleteInThemeAssets,
-  isChildDir,
-  logEvent,
-  logWarn,
-  logWarnConsole,
-  renameFile,
-} from './utils.js';
+import { copyAllAssetMap, getBundleFiles, isChildDir, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
 
 import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
 import type { RenderedChunk } from 'rollup';
@@ -165,41 +157,45 @@ export const buildPlugin = ({
     async writeBundle(_, bundle: { [fileName: string]: RenderedChunk }): Promise<void> {
       if (!clean) return;
 
-      const filesToDelete = new Set(await getFilesToDeleteInThemeAssets(themeAssetsDir, bundle));
+      const themeAssetFiles = readdirSync(themeAssetsDir);
+      const newBundleFiles = getBundleFiles(bundle);
+      const oldFiles = themeAssetFiles
+        .filter((file) => !newBundleFiles.includes(file) && !assetFilesSet.has(file))
+        .map((file) => normalizePath(join(themeAssetsDir, file)));
 
-      for (const target of assetMap.values()) {
-        const keepFiles = await fg(target.dest);
-        if (keepFiles?.length) keepFiles.forEach((file) => filesToDelete.delete(file));
+      const filesToDelete = new Set(oldFiles.length ? oldFiles : []);
 
+      for (const target of targets) {
         if (!target.cleanMatch) continue;
-        const otherRemovedFiles = await fg(target.cleanMatch, { ignore: [target.dest] });
-        if (otherRemovedFiles?.length) filesToDelete.add(...otherRemovedFiles);
+
+        const matchFiles = await fg(target.cleanMatch);
+        if (!matchFiles.length) continue;
+
+        const matchToDelete = matchFiles.filter((file) => !assetDestSet.has(file));
+        if (!matchToDelete.length) continue;
+
+        filesToDelete.add(...matchToDelete);
       }
+
+      if (!filesToDelete.size) return;
 
       await Promise.all(
         Array.from(filesToDelete).map(async (file) => {
           return existsSync(file) ? unlink(file).then(() => Promise.resolve(file)) : Promise.resolve(file);
         }),
-      )
-        .then((results) => {
-          if (!results.length) return;
-          for (const fileDeleted of results) {
-            const relativePath = relative(process.cwd(), fileDeleted);
-            logEvent('delete', relativePath, logger);
-          }
-        })
-        .catch((error: Error) => {
-          if (!silent) logger.error(error);
-        });
+      ).catch((error: Error) => {
+        if (!silent) logger.error(error);
+      });
     },
 
-    closeBundle(): Promise<void> {
+    async closeBundle(): Promise<void> {
       if (onBuild || (onWatch && this.meta.watchMode)) {
-        copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
+        await copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
       }
     },
 
-    watchChange(fileChanged: string, { event }): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async watchChange(fileChanged: string, { event }): Promise<void> {
       // Check if the file changed is in our watched assets directory
       // If it's not, we don't care about it.
       if (!assetDirSet.has(dirname(fileChanged))) {
@@ -233,9 +229,9 @@ export const buildPlugin = ({
       }
     },
 
-    closeWatcher(): Promise<void> {
+    async closeWatcher(): Promise<void> {
       // Copy all assets on close to make sure they're up to date.
-      copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
+      await copyAllAssetMap(assetMap, logger, { silent, timestamp: false });
     },
   };
 };

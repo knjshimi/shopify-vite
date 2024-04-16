@@ -179,7 +179,7 @@ export const copyAllAssets = async (
     silent: true,
     timestamp: false,
   },
-): void => {
+): Promise<void> => {
   const assetFiles = await fg(normalizePath(target.src), { ignore: target.ignore });
   if (!assetFiles.length) return;
 
@@ -210,7 +210,7 @@ export const copyAllAssets = async (
   }
 };
 
-export const copyAllAssetMap = (
+export const copyAllAssetMap = async (
   assetMap: AssetMap,
   logger: Logger,
   options: {
@@ -220,7 +220,7 @@ export const copyAllAssetMap = (
     silent: true,
     timestamp: false,
   },
-): void => {
+): Promise<void> => {
   if (!assetMap?.size) return;
 
   const { silent, timestamp } = options;
@@ -228,7 +228,7 @@ export const copyAllAssetMap = (
   for (const [src, target] of assetMap.entries()) {
     const fileExists = existsSync(target.dest);
 
-    cp(src, target.dest, {
+    await cp(src, target.dest, {
       dereference: target.dereference,
       errorOnExist: target.errorOnExist,
       force: target.force,
@@ -248,7 +248,8 @@ export const copyAllAssetMap = (
 export const getFilesToDeleteInThemeAssets = async (
   themeAssetsDir: string,
   bundle: { [fileName: string]: RenderedChunk },
-) => {
+  assetDestSet: Set<string>,
+): Promise<string[]> => {
   if (!bundle || !Object.keys(bundle).length) {
     return [];
   }
@@ -286,7 +287,43 @@ export const getFilesToDeleteInThemeAssets = async (
 
   const filesToDelete = filesInAssetsDir
     .filter((file) => !filesInBundle.includes(file))
-    .map((file) => normalizePath(join(themeAssetsDir, file)));
+    .map((file) => normalizePath(join(themeAssetsDir, file)))
+    .filter((file) => !assetDestSet.has(file));
 
   return filesToDelete;
+};
+
+export const getBundleFiles = (bundle: { [fileName: string]: RenderedChunk }): string[] => {
+  if (!bundle || !Object.keys(bundle).length) {
+    return [];
+  }
+
+  return Object.entries(bundle).reduce((acc, [fileName, chunk]) => {
+    if (fileName.startsWith('.vite/')) {
+      return [...acc, '.vite'];
+    }
+
+    if (chunk.type === 'asset') {
+      return [...acc, fileName];
+    }
+
+    if (chunk.type === 'chunk') {
+      const importedFiles = [] as string[];
+      if (chunk.viteMetadata?.importedCss?.size) {
+        chunk.viteMetadata.importedCss.forEach((cssFile) => {
+          importedFiles.push(cssFile);
+        });
+      }
+
+      if (chunk.viteMetadata?.importedAssets?.size) {
+        chunk.viteMetadata.importedAssets.forEach((assetFile) => {
+          importedFiles.push(assetFile);
+        });
+      }
+
+      return [...acc, fileName, ...importedFiles];
+    }
+
+    return acc;
+  }, [] as string[]);
 };
