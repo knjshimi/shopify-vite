@@ -93,8 +93,10 @@ export const servePlugin = ({
               logEvent('delete', relativePath, logger, true);
             }
           })
-          .catch((error: Error) => {
-            if (!silent) logger.error(error);
+          .catch((error: unknown) => {
+            if (silent) return;
+            const message = error instanceof Error ? error.message : 'An unknown error occurred while deleting files';
+            logger.error(message);
           });
       }
 
@@ -104,7 +106,7 @@ export const servePlugin = ({
       }
     },
 
-    watchChange(fileChanged: string, { event }): Promise<void> {
+    async watchChange(fileChanged: string, { event }): Promise<void> {
       if (!onServe) return;
 
       const target = targets.find((_target) => picomatch(_target.src)(fileChanged));
@@ -119,16 +121,18 @@ export const servePlugin = ({
       switch (event) {
         case 'create':
         case 'update':
-          copyAsset(target, fileChanged, event, logger, silent).catch((error: Error) => {
-            if (!silent) logger.error(error);
+          return copyAsset(target, fileChanged, event, logger, silent).catch((error: unknown) => {
+            if (silent) return;
+            const message = error instanceof Error ? error.message : 'An unknown error occurred while copying files';
+            logger.error(message);
           });
-          break;
 
         case 'delete':
-          deleteAsset(target, fileChanged, event, logger, silent).catch((error: Error) => {
-            if (!silent) logger.error(error);
+          return deleteAsset(target, fileChanged, event, logger, silent).catch((error: unknown) => {
+            if (silent) return;
+            const message = error instanceof Error ? error.message : 'An unknown error occurred while deleting files';
+            logger.error(message);
           });
-          break;
       }
     },
   };

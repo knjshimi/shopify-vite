@@ -19,7 +19,7 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "skipLibCheck": false
+    "skipLibCheck": true
   },
   "include": ["*.ts", "src/**/*.ts"],
   "exclude": ["dist", "build", "node_modules"]

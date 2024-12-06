@@ -8,7 +8,7 @@ import { normalizePath } from 'vite';
 import { copyAllAssetMap, getBundleFiles, isChildDir, logEvent, logWarn, logWarnConsole, renameFile } from './utils.js';
 
 import type { Logger, Plugin, ResolvedConfig, UserConfig } from 'vite';
-import type { RenderedChunk } from 'rollup';
+import type { OutputAsset, OutputChunk } from 'rollup';
 import type { ResolvedTarget, ResolvedPluginShopifyAssetsOptions } from './options.js';
 
 export type AssetMap = Map<string, ResolvedTarget>;
@@ -154,7 +154,7 @@ export const buildPlugin = ({
       }
     },
 
-    async writeBundle(_, bundle: { [fileName: string]: RenderedChunk }): Promise<void> {
+    async writeBundle(_, bundle: { [fileName: string]: OutputAsset | OutputChunk }): Promise<void> {
       if (!clean) return;
 
       const themeAssetFiles = readdirSync(themeAssetsDir);
@@ -174,7 +174,7 @@ export const buildPlugin = ({
         const matchToDelete = matchFiles.filter((file) => !assetDestSet.has(file));
         if (!matchToDelete.length) continue;
 
-        filesToDelete.add(...matchToDelete);
+        matchToDelete.forEach((file) => filesToDelete.add(file));
       }
 
       if (!filesToDelete.size) return;
@@ -183,8 +183,10 @@ export const buildPlugin = ({
         Array.from(filesToDelete).map(async (file) => {
           return existsSync(file) ? unlink(file).then(() => Promise.resolve(file)) : Promise.resolve(file);
         }),
-      ).catch((error: Error) => {
-        if (!silent) logger.error(error);
+      ).catch((error: unknown) => {
+        if (silent) return;
+        const message = error instanceof Error ? error.message : 'An unknown error occurred while deleting files';
+        logger.error(message);
       });
     },
 
@@ -219,8 +221,10 @@ export const buildPlugin = ({
               const relativeDeleted = relative(themeRoot, asset.dest);
               logEvent(event, relativeDeleted, logger);
             })
-            .catch((error: Error) => {
-              if (!silent) logger.error(error);
+            .catch((error: unknown) => {
+              if (silent) return;
+              const message = error instanceof Error ? error.message : 'An unknown error occurred while deleting files';
+              logger.error(message);
             });
         }
 

@@ -6,7 +6,8 @@ import fg from 'fast-glob';
 import { normalizePath } from 'vite';
 
 import type { Logger } from 'vite';
-import type { RenderedChunk } from 'rollup';
+import type { OutputAsset, OutputChunk } from 'rollup';
+// import type { RenderedChunk } from 'rollup';
 import type { AssetMap } from './build.js';
 import type { ResolvedTarget, RenameFunc } from './options.js';
 
@@ -140,9 +141,9 @@ export const copyAsset = async (
     preserveTimestamps: target.preserveTimestamps,
   })
     .then(() => logEvent(event, relativePath, logger, true))
-    .catch((error: Error) => {
+    .catch((error: unknown) => {
       logError(`could not create ${relativePath}`, logger, true);
-      if (!silent) logger.error(error);
+      if (!silent && error instanceof Error) logger.error(error.message);
     });
 };
 
@@ -163,9 +164,9 @@ export const deleteAsset = async (
 
   unlink(destPath)
     .then(() => logEvent(event, relativePath, logger, true))
-    .catch((error: Error) => {
+    .catch((error: unknown) => {
       logError(`Could not delete ${relativePath}`, logger, true);
-      if (!silent) logger.error(error);
+      if (!silent && error instanceof Error) logger.error(error.message);
     });
 };
 
@@ -203,9 +204,9 @@ export const copyAllAssets = async (
       .then(() => {
         if (!fileExists) logCopySuccess(dest, src, logger, timestamp);
       })
-      .catch((error: Error) => {
+      .catch((error: unknown) => {
         logCopyError(dest, src, logger, timestamp);
-        if (!silent) logger.error(error);
+        if (!silent && error instanceof Error) logger.error(error.message);
       });
   }
 };
@@ -238,16 +239,16 @@ export const copyAllAssetMap = async (
       .then(() => {
         if (!fileExists) logCopySuccess(target.dest, src, logger, timestamp);
       })
-      .catch((error: Error) => {
+      .catch((error: unknown) => {
         logCopyError(target.dest, src, logger, timestamp);
-        if (!silent) logger.error(error);
+        if (!silent && error instanceof Error) logger.error(error.message);
       });
   }
 };
 
 export const getFilesToDeleteInThemeAssets = async (
   themeAssetsDir: string,
-  bundle: { [fileName: string]: RenderedChunk },
+  bundle: { [fileName: string]: OutputAsset | OutputChunk },
   assetDestSet: Set<string>,
 ): Promise<string[]> => {
   if (!bundle || !Object.keys(bundle).length) {
@@ -262,6 +263,7 @@ export const getFilesToDeleteInThemeAssets = async (
     }
 
     if (chunk.type === 'asset') {
+      console.log('asset', fileName);
       return [...acc, fileName];
     }
 
@@ -293,7 +295,7 @@ export const getFilesToDeleteInThemeAssets = async (
   return filesToDelete;
 };
 
-export const getBundleFiles = (bundle: { [fileName: string]: RenderedChunk }): string[] => {
+export const getBundleFiles = (bundle: { [fileName: string]: OutputAsset | OutputChunk }): string[] => {
   if (!bundle || !Object.keys(bundle).length) {
     return [];
   }
