@@ -7,6 +7,10 @@
     "lint": {
       "outputs": []
     },
+    "format": {
+      "dependsOn": ["^format"],
+      "outputs": []
+    },
     "dev": {
       "cache": false,
       "persistent": true
