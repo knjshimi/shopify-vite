@@ -46,7 +46,7 @@
     "picomatch": "^3.0.1"
   },
   "devDependencies": {
-    "@types/node": "20.0.0",
+    "@types/node": "22.0.0",
     "@types/picomatch": "^2.3.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
