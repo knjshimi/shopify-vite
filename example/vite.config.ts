@@ -12,6 +12,13 @@ export default defineConfig({
       '@modules': resolve('frontend/modules'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern',
+      },
+    },
+  },
   plugins: [
     shopifyAssets({
       themeRoot: 'theme',
